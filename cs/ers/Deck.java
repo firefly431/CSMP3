@@ -24,4 +24,24 @@ public class Deck {
             }
         }
     }
+    public void shuffle() {
+        Collections.sort(cards);
+    }
+    public void deal(Deck to) {
+        to.cards.addFirst(cards.removeLast());
+    }
+    public void dealAll(Deck to) {
+        to.cards.addAll(0, cards);
+        cards.clear();
+    }
+    // return.length <= num
+    public Card getFront(int num)[] {
+        Card[] ret = new Card[cards.size() < num ? cards.size() : num];
+        int i = 0;
+        for (Card c : cards) {
+            ret[i++] = c;
+            if (i >= ret.length) break;
+        }
+        return ret;
+    }
 }

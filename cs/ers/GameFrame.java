@@ -10,8 +10,8 @@ import java.awt.event.*;
 public class GameFrame extends JFrame {
     // note: WINDOW_WIDTH > BOARD_WIDTH * PIECE_SIZE
     // same for height
-    public static final int WINDOW_WIDTH = 640;
-    public static final int WINDOW_HEIGHT = 480;
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 720;
     private StatePanel currentPanel;
 
     public static Font PLAY_BODY;
@@ -26,7 +26,7 @@ public class GameFrame extends JFrame {
     }
 
     public GameFrame() {
-        super("Tetris!");
+        super("ERS!");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         if (mainFrame != null) {
@@ -41,6 +41,7 @@ public class GameFrame extends JFrame {
     public void init() {
         // load font
         currentPanel = new GamePanel();
+        GamePanel.init();
         getContentPane().add(currentPanel);
         addKeyListener((KeyListener)currentPanel);
         pack();

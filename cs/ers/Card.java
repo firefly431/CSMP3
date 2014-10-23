@@ -31,9 +31,12 @@ public class Card implements Comparable<Card> {
     public static final int QUEEN = 12;
     public static final int KING = 13;
     public static final int VALUE_MAX = 13;
+    // constants
+    public static final int WIDTH = 112;
+    public static final int HEIGHT = 156;
     // variables
     private int suit, value;
-    public Card(int s, int v) {
+    public Card(int v, int s) {
         suit = s;
         value = v;
     }
