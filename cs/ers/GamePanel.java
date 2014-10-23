@@ -64,7 +64,7 @@ public class GamePanel extends StatePanel {
         drawCard(g, card.getIndex(), x, y);
     }
     public void drawDeck(Graphics g, int num, int x, int y) {
-        for (int i = (num & ~1) - 1; i >= 0; i -= 2) {
+        for (int i = (num + 1 & ~1) - 1; i >= 0; i -= 2) {
             int dx = x - i;
             int dy = y;
             g.drawImage(backImg, dx, dy, this);
@@ -72,16 +72,21 @@ public class GamePanel extends StatePanel {
     }
     public void drawDeck(Graphics g, Deck d, int x, int y) {
         drawDeck(g, d.cards.size(), x, y);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 36));
+        g.drawString("" + d.cards.size(), x + CW/3 , y- 10);
     }
     public void drawFront(Graphics g, int[] indices, int x, int y) {
         for (int i = indices.length - 1; i >= 0; i--) {
             drawCard(g, indices[i], x - i * 20, y);
         }
+         
     }
     public void drawFront(Graphics g, Card[] cards, int x, int y) {
         for (int i = cards.length - 1; i >= 0; i--) {
             drawCard(g, cards[i], x - i * 20, y);
         }
+         g.drawString("" + middle.cards.size(), x + CW/3 , y - 10);
     }
     @Override
     public void paint(Graphics g) {
@@ -110,7 +115,7 @@ public class GamePanel extends StatePanel {
             cp %= pdecks.length;
             pdecks[cp].deal(middle);
         }
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && middle.canSlap()) {
             middle.dealAll(pdecks[0]);
             cp = 0;
         }

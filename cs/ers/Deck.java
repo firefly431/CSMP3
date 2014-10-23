@@ -27,6 +27,7 @@ public class Deck {
     public void shuffle() {
         Collections.sort(cards);
     }
+
     public void deal(Deck to) {
         to.cards.addFirst(cards.removeLast());
     }
@@ -34,6 +35,25 @@ public class Deck {
         to.cards.addAll(0, cards);
         cards.clear();
     }
+
+    public boolean canSlap() {
+        int top = cards.get(0).getValue();
+        int second = cards.get(1).getValue();
+        int third = cards.get(2).getValue();
+
+        if(top == second) { //double
+            return true;
+        }
+        if(top == third) { //sandwich
+            return true;
+        }
+        if((top == 12 && second == 13) || (top == 13 && second == 12)) { //marriage
+            return true;
+        }
+        return false;
+    }
+
+
     // return.length <= num
     public Card getFront(int num)[] {
         Card[] ret = new Card[cards.size() < num ? cards.size() : num];
