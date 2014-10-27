@@ -5,6 +5,7 @@
 
 package cs.ers.server;
 
+import cs.ers.Deck;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +22,8 @@ public class ServerThread extends Thread {
     BufferedReader in;
     PrintWriter out;
     String pname;
+    Deck deck;
+    int penalty;
     public ServerThread(Socket sock, Server serv) {
         this.sock = sock;
         this.serv = serv;
@@ -29,6 +32,20 @@ public class ServerThread extends Thread {
             out = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        penalty = 0;
+        deck = new Deck();
+    }
+    public String getPlayerName() {
+        return pname;
+    }
+    public int getNumCards() {
+        return deck.cards.size();
+    }
+    public void send(String data) {
+        if (!sock.isClosed()) {
+            out.print(data);
+            out.flush();
         }
     }
     @Override
@@ -39,7 +56,9 @@ public class ServerThread extends Thread {
                 pname = in.readLine();
                 if (pname == null || pname.equals(""))
                     throw new IOException("Invalid name");
-                serv.register(pname, this);
+                synchronized (serv) {
+                    serv.register(pname, this);
+                }
             } catch (Server.NameTakenException e) {
                 out.println("ERROR name taken");
                 out.flush();
@@ -49,23 +68,26 @@ public class ServerThread extends Thread {
                 return;
             }
             try {
-            // read, write
-            while (true) {
-                String cmd = in.readLine();
-                if (cmd == null) break;
-                if (cmd.equals("DEAL")) {
-                    System.out.println(pname + " deals");
-                } else if (cmd.equals("CLAIM")) {
-                    System.out.println(pname + " claims");
+                // read, write
+                while (true) {
+                    String cmd = in.readLine();
+                    if (cmd == null) break;
+                    if (cmd.equals("DEAL")) {
+                        System.out.println(pname + " deals");
+                    } else if (cmd.equals("CLAIM")) {
+                        System.out.println(pname + " claims");
+                    }
+                    serv.broadcast();
                 }
-            }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } finally {
             try {
                 sock.close();
-                serv.deregister(pname, this);
+                synchronized (serv) {
+                    serv.deregister(pname, this);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
