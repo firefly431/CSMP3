@@ -35,6 +35,9 @@ public class Deck {
         to.cards.addAll(0, cards);
         cards.clear();
     }
+    public void burn(Deck to) {
+        to.cards.addLast(cards.removeLast());
+    }
 
     public boolean canSlap() {
         int top = cards.get(0).getValue();
