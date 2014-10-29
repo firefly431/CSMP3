@@ -11,10 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -22,7 +22,7 @@ import javax.swing.JPanel;
  */
 public class Server {
     private ServerSocket ss;
-    private TreeMap<String, ServerThread> players;
+    private ArrayList<ServerThread> players;
 
     public Deck middle;
 
@@ -30,9 +30,12 @@ public class Server {
 
     public static class NameTakenException extends Exception {}
 
+    public long lastSlap;
+    public int turn;
+
     public void init(int port) {
         middle = new Deck(true);
-        players = new TreeMap<String, ServerThread>();
+        players = new ArrayList<ServerThread>();
         try {
             ss = new ServerSocket(port);
         } catch (IOException e) {
@@ -41,15 +44,15 @@ public class Server {
     }
 
     public synchronized void register(String name, ServerThread sock) throws NameTakenException {
-        if (players.containsKey(name))
-            throw new NameTakenException();
-        players.put(name, sock);
+        for (ServerThread t : players) {
+            if (t.pname.equals(name))
+                throw new NameTakenException();
+        }
+        players.add(sock);
     }
 
     public synchronized void deregister(String name, ServerThread sock) {
-        if (players.get(name) != sock)
-            throw new RuntimeException("Name registered to wrong thread");
-        players.remove(name);
+        players.remove(sock);
     }
 
     public void run() {
@@ -60,11 +63,11 @@ public class Server {
             public void actionPerformed(ActionEvent e) {
                 if (players.size() == 0) return;
                 // redistribute cards
-                for (ServerThread t : players.values()) {
+                for (ServerThread t : players) {
                     t.deck.burnAll(middle);
                 }
                 middle.shuffle();
-                ServerThread threads[] = players.values().toArray(new ServerThread[players.size()]);
+                ServerThread threads[] = players.toArray(new ServerThread[players.size()]);
                 int nc = middle.cards.size() / threads.length;
                 for (int q = 0; q < nc; q++) {
                     for (int i = 0; i < threads.length; i++)
@@ -99,7 +102,7 @@ public class Server {
         data.append(players.size());
         data.append('\n');
         // send player name and deck size
-        for (ServerThread p : players.values()) {
+        for (ServerThread p : players) {
             data.append(p.getPlayerName());
             data.append('\n');
             data.append(p.getNumCards());
@@ -113,7 +116,7 @@ public class Server {
             data.append('\n');
         }
         String sss = data.toString();
-        for (ServerThread p : players.values()) {
+        for (ServerThread p : players) {
             p.send(sss);
         }
     }

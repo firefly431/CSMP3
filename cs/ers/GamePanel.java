@@ -71,8 +71,8 @@ public class GamePanel extends StatePanel {
         g.setColor(Color.BLACK);
         FontMetrics fm = g.getFontMetrics();
         int tx = x + Card.WIDTH / 2;
-        tx -= fm.stringWidth(p.name);
-        g.drawString(p.name, tx, y - 3);
+        tx -= fm.stringWidth(p.name + " " + p.ncards);
+        g.drawString(p.name + " " + p.ncards, tx, y - 3);
     }
     public void drawDeck(Graphics g, Deck d, int x, int y) {
         drawDeck(g, d.cards.size(), x, y);

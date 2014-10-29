@@ -24,6 +24,7 @@ public class ServerThread extends Thread {
     String pname;
     Deck deck;
     int penalty;
+    int SLAP_DELAY_NS = (500000000);
     public ServerThread(Socket sock, Server serv) {
         this.sock = sock;
         this.serv = serv;
@@ -86,7 +87,14 @@ public class ServerThread extends Thread {
                             if (serv.middle.canSlap()) {
                                 serv.middle.dealAll(deck);
                             } else {
-                                deck.burn(serv.middle);
+                                if (serv.lastSlap < System.nanoTime() - SLAP_DELAY_NS) {
+                                    serv.lastSlap = System.nanoTime();
+                                    if (deck.cards.size() > 0) {
+                                        deck.burn(serv.middle);
+                                    } else {
+                                        // increase penalty
+                                    }
+                                }
                             }
                         }
                     }

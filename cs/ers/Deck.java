@@ -45,18 +45,19 @@ public class Deck {
     }
 
     public boolean canSlap() {
-        int top = cards.get(0).getValue();
-        int second = cards.get(1).getValue();
-        int third = cards.get(2).getValue();
-
-        if(top == second) { //double
-            return true;
-        }
-        if(top == third) { //sandwich
-            return true;
-        }
-        if((top == 12 && second == 13) || (top == 13 && second == 12)) { //marriage
-            return true;
+        try {
+            if ((cards.get(0).getValue() == Card.KING  && cards.get(1).getValue() == Card.QUEEN)
+             || (cards.get(0).getValue() == Card.QUEEN && cards.get(1).getValue() == Card.KING)) { //marriage
+                return true;
+            }
+            if (cards.get(0) == cards.get(1)) { //double
+                return true;
+            }
+            if (cards.get(0) == cards.get(2)) { //sandwich
+                return true;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            return false;
         }
         return false;
     }
