@@ -24,6 +24,7 @@ public class Deck {
             }
         }
     }
+
     public void shuffle() {
         Collections.sort(cards);
     }
@@ -37,6 +38,10 @@ public class Deck {
     }
     public void burn(Deck to) {
         to.cards.addLast(cards.removeLast());
+    }
+    public void burnAll(Deck to) {
+        to.cards.addAll(cards);
+        cards.clear();
     }
 
     public boolean canSlap() {

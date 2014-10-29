@@ -22,26 +22,20 @@ public class GamePanel extends StatePanel {
     private static final int CW = Card.WIDTH;
     private static final int CH = Card.HEIGHT;
 
-    Deck p1, p2, p3, p4;
+    private MessageSender sender;
+
+    Player[] decks;
+    int index; // index in decks[] of us
     Deck middle;
-    Deck[] pdecks;
 
     public GamePanel() {
-        p1 = new Deck();
-        p2 = new Deck();
-        p3 = new Deck();
-        p4 = new Deck();
-        Deck start = new Deck(true);
-        start.shuffle();
-        for (int i = 0; i < 13; i++) {
-            start.deal(p1);
-            start.deal(p2);
-            start.deal(p3);
-            start.deal(p4);
-        }
-        assert start.cards.isEmpty();
-        middle = new Deck();
-        pdecks = new Deck[]{p1, p2, p3, p4};
+        decks = new Player[0];
+        sender = null;
+        index = -1;
+    }
+
+    public void setSender(MessageSender s) {
+        sender = s;
     }
 
     public static void init() {
@@ -69,12 +63,19 @@ public class GamePanel extends StatePanel {
             int dy = y;
             g.drawImage(backImg, dx, dy, this);
         }
+        FontMetrics fm = g.getFontMetrics();
+        //
+    }
+    public void drawDeck(Graphics g, Player p, int x, int y) {
+        drawDeck(g, p.ncards, x, y);
+        g.setColor(Color.BLACK);
+        FontMetrics fm = g.getFontMetrics();
+        int tx = x + Card.WIDTH / 2;
+        tx -= fm.stringWidth(p.name);
+        g.drawString(p.name, tx, y - 3);
     }
     public void drawDeck(Graphics g, Deck d, int x, int y) {
         drawDeck(g, d.cards.size(), x, y);
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 36));
-        g.drawString("" + d.cards.size(), x + CW/3 , y- 10);
     }
     public void drawFront(Graphics g, int[] indices, int x, int y) {
         for (int i = indices.length - 1; i >= 0; i--) {
@@ -86,7 +87,6 @@ public class GamePanel extends StatePanel {
         for (int i = cards.length - 1; i >= 0; i--) {
             drawCard(g, cards[i], x - i * 20, y);
         }
-         g.drawString("" + middle.cards.size(), x + CW/3 , y - 10);
     }
     @Override
     public void paint(Graphics g) {
@@ -95,29 +95,62 @@ public class GamePanel extends StatePanel {
         // draw test stuff
         int dsx = 50;
         int dex = (GameFrame.WINDOW_WIDTH - dsx - Card.WIDTH);
+        int dfx = dex - dsx;
         int dsy = 50;
         int dey = (GameFrame.WINDOW_HEIGHT - dsy - Card.HEIGHT);
         // since 3 decks other than us, draw at
         // (dsx, dsy), ((dsx + dex) / 2, dsy), (dex, dsy)
-        drawDeck(g, p2, dsx, dsy);
-        drawDeck(g, p3, (dsx + dex) / 2, dsy);
-        drawDeck(g, p4, dex, dsy);
+//        drawDeck(g, p2, dsx, dsy);
+//        drawDeck(g, p3, (dsx + dex) / 2, dsy);
+//        drawDeck(g, p4, dex, dsy);
+        int ndecks = decks.length;
+        if (index >= 0)
+            --ndecks;
+        if (ndecks > 1) {
+            int ei = 0;
+            for (int i = 0; i < decks.length; i++) {
+                if (i == index) continue;
+                int dx = dsx + dfx * ei++ / (ndecks - 1);
+                drawDeck(g, decks[i], dx, dsy);
+            }
+        }
+        if (ndecks == 1) {
+            drawDeck(g, decks[decks.length == 1 ? 0 : (1 - index)], (dsx + dex) / 2, dsy);
+        }
         // draw us
-        drawDeck(g, p1, (dsx + dex) / 2, dey);
-        // draw middle
-        drawFront(g, middle.getFront(5), (dsx + dex) / 2, (dsy + dey) / 2);
+        if (index >= 0)
+            drawDeck(g, decks[index], (dsx + dex) / 2, dey);
+        if (middle != null) {
+            synchronized (middle) {
+                // draw middle
+                drawFront(g, middle.getFront(5), (dsx + dex) / 2, (dsy + dey) / 2);
+            }
+        }
     }
-    int cp = 0;
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_D) {
-            cp++;
-            cp %= pdecks.length;
-            pdecks[cp].deal(middle);
+            // send message
+            sender.send("DEAL");
         }
-        if (e.getKeyCode() == KeyEvent.VK_SPACE && middle.canSlap()) {
-            middle.dealAll(pdecks[0]);
-            cp = 0;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            // send message
+            sender.send("CLAIM");
+        }
+    }
+    // does not clone
+    public void updatePlayers(Player[] players, int me) {
+        decks = players;
+        index = me;
+        repaint();
+    }
+    // does clone
+    public void updateMiddle(int[] m) {
+        middle = new Deck();
+        synchronized (middle) {
+            for (int c : m) {
+                middle.cards.add(new Card(c));
+            }
         }
         repaint();
     }

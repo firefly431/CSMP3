@@ -7,9 +7,14 @@ package cs.ers.server;
 
 import cs.ers.Card;
 import cs.ers.Deck;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
 import java.util.TreeMap;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -19,7 +24,9 @@ public class Server {
     private ServerSocket ss;
     private TreeMap<String, ServerThread> players;
 
-    private Deck middle;
+    public Deck middle;
+
+    public static final int PORT = 5760;
 
     public static class NameTakenException extends Exception {}
 
@@ -46,6 +53,35 @@ public class Server {
     }
 
     public void run() {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JButton button = new JButton("Distribute cards");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (players.size() == 0) return;
+                // redistribute cards
+                for (ServerThread t : players.values()) {
+                    t.deck.burnAll(middle);
+                }
+                middle.shuffle();
+                ServerThread threads[] = players.values().toArray(new ServerThread[players.size()]);
+                int nc = middle.cards.size() / threads.length;
+                for (int q = 0; q < nc; q++) {
+                    for (int i = 0; i < threads.length; i++)
+                        middle.deal(threads[i].deck);
+                }
+                int i = (int)(Math.random() * threads.length);
+                while (!middle.cards.isEmpty()) {
+                    // deal to a random player
+                    middle.deal(threads[(i++) % threads.length].deck);
+                }
+                broadcast();
+            }
+        });
+        frame.getContentPane().add(button);
+        frame.pack();
+        frame.setVisible(true);
+        
         try {
             while (true) {
                 Socket s = ss.accept();
@@ -65,7 +101,7 @@ public class Server {
         // send player name and deck size
         for (ServerThread p : players.values()) {
             data.append(p.getPlayerName());
-            data.append(' ');
+            data.append('\n');
             data.append(p.getNumCards());
             data.append('\n');
         }
@@ -84,7 +120,7 @@ public class Server {
 
     public static void main(String argv[]) {
         Server s = new Server();
-        s.init(5000);
+        s.init(Server.PORT);
         s.run();
     }
 }

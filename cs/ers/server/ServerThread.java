@@ -67,15 +67,28 @@ public class ServerThread extends Thread {
                 e.printStackTrace();
                 return;
             }
+            out.println("ACK");
+            out.flush();
+            serv.broadcast();
             try {
                 // read, write
                 while (true) {
                     String cmd = in.readLine();
                     if (cmd == null) break;
                     if (cmd.equals("DEAL")) {
-                        System.out.println(pname + " deals");
+                        // TODO: make this actually work
+                        synchronized (serv) {
+                            if (deck.cards.size() > 0)
+                                deck.deal(serv.middle);
+                        }
                     } else if (cmd.equals("CLAIM")) {
-                        System.out.println(pname + " claims");
+                        synchronized (serv) {
+                            if (serv.middle.canSlap()) {
+                                serv.middle.dealAll(deck);
+                            } else {
+                                deck.burn(serv.middle);
+                            }
+                        }
                     }
                     serv.broadcast();
                 }
@@ -84,13 +97,15 @@ public class ServerThread extends Thread {
             }
         } finally {
             try {
-                sock.close();
                 synchronized (serv) {
+                    deck.burnAll(serv.middle);
                     serv.deregister(pname, this);
                 }
+                sock.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            serv.broadcast();
         }
     }
 }

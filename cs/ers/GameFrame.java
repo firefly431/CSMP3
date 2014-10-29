@@ -73,10 +73,4 @@ public class GameFrame extends JFrame {
         currentPanel.revalidate();
         repaint();
     }
-
-    public static void main(String argv[]) {
-        GameFrame frame = new GameFrame();
-        frame.init();
-        frame.setVisible(true);
-    }
 }
