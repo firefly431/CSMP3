@@ -77,10 +77,16 @@ public class ServerThread extends Thread {
                     String cmd = in.readLine();
                     if (cmd == null) break;
                     if (cmd.equals("DEAL")) {
-                        // TODO: make this actually work
+                        // TODO: make face cards work
                         synchronized (serv) {
-                            if (deck.cards.size() > 0)
-                                deck.deal(serv.middle);
+                            if (deck.cards.size() > 0) {
+                                if (serv.turn == serv.getIndex(this)) {
+                                    deck.deal(serv.middle);
+                                    serv.nextTurn();
+                                } else {
+                                    deck.burn(serv.middle);
+                                }
+                            }
                         }
                     } else if (cmd.equals("CLAIM")) {
                         synchronized (serv) {

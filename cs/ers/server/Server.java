@@ -55,6 +55,31 @@ public class Server {
         players.remove(sock);
     }
 
+    public synchronized void nextTurn() {
+        turn++;
+        validateTurn();
+    }
+
+    public synchronized void validateTurn() {
+        if (players.size() == 0) return;
+        if (turn >= players.size())
+            turn = 0;
+        boolean reset = false;
+        while (players.get(turn).deck.cards.size() == 0) {
+            turn++;
+            if (turn >= players.size()) {
+                turn = 0;
+                if (reset)
+                    return; // everyone's out of cards!
+                reset = true;
+            }
+        }
+    }
+
+    public synchronized int getIndex(ServerThread t) {
+        return players.indexOf(t);
+    }
+
     public void run() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

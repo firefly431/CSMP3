@@ -26,7 +26,7 @@ public class Deck {
     }
 
     public void shuffle() {
-        Collections.sort(cards);
+        Collections.shuffle(cards);
     }
 
     public void deal(Deck to) {
@@ -50,10 +50,10 @@ public class Deck {
              || (cards.get(0).getValue() == Card.QUEEN && cards.get(1).getValue() == Card.KING)) { //marriage
                 return true;
             }
-            if (cards.get(0) == cards.get(1)) { //double
+            if (cards.get(0).getValue() == cards.get(1).getValue()) { //double
                 return true;
             }
-            if (cards.get(0) == cards.get(2)) { //sandwich
+            if (cards.get(0).getValue() == cards.get(2).getValue()) { //sandwich
                 return true;
             }
         } catch (IndexOutOfBoundsException e) {
