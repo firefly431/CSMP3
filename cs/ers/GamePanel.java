@@ -89,10 +89,9 @@ public class GamePanel extends StatePanel {
         drawDeck(g, d.cards.size(), x, y);
     }
     public void drawFront(Graphics g, int[] indices, int x, int y) {
-        for (int i = indices.length - 1; i >= 0; i--) {
-            drawCard(g, indices[i], x - i * 20, y);
-        }
-         
+         for (int i = indices.length - 1; i >= 0; i--) {
+             drawCard(g, indices[i], x - i * 20, y);
+         }
     }
     public void drawFront(Graphics g, Card[] cards, int x, int y) {
         for (int i = cards.length - 1; i >= 0; i--) {

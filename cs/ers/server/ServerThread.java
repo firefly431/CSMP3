@@ -126,8 +126,10 @@ public class ServerThread extends Thread {
                                     }
                                     if (next)
                                         serv.nextTurn();
+                                    serv.validateTurn();
                                 } else {
                                     deck.burn(serv.middle);
+                                    serv.validateTurn();
                                 }
                             }
                         }
@@ -140,13 +142,14 @@ public class ServerThread extends Thread {
                                 serv.turn = serv.getIndex(this);
                             } else {
                                 if (serv.lastSlap < System.nanoTime() - SLAP_DELAY_NS) {
-                                    serv.lastSlap = System.nanoTime();
                                     if (deck.cards.size() > 0) {
                                         deck.burn(serv.middle);
+                                        serv.validateTurn();
                                     } else {
                                         // increase penalty
                                     }
                                 }
+                                serv.lastSlap = System.nanoTime();
                             }
                         }
                     }
