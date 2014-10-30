@@ -81,12 +81,13 @@ public class Client {
                 if (pn.equals(name)) me = i;
                 int nc = s.nextInt();
                 s.nextLine();
-                Player p = new Player(pn, nc);
+                boolean pturn = s.nextBoolean();
+                s.nextLine();
+                boolean pclaim = s.nextBoolean();
+                s.nextLine();
+                Player p = new Player(pn, nc, pturn, pclaim);
                 players[i] = p;
             }
-            for (Player p : players)
-                System.out.println(p);
-            System.out.println("Our index is " + me);
             int nc = s.nextInt();
             s.nextLine();
             int[] cards = new int[nc];

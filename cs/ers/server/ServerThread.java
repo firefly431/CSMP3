@@ -105,10 +105,13 @@ public class ServerThread extends Thread {
                                         default:
                                             if (serv.counter != -1) {
                                                 serv.counter--;
-                                                if (serv.counter == -1) {
+                                                if (serv.counter == 0) {
                                                     // person before you
                                                     // can take cards
+                                                    System.out.println("Setting claim");
                                                     serv.setClaim();
+                                                    System.out.println("Claim is " + serv.claim);
+                                                    System.out.println("We are " + serv.getIndex(this));
                                                 } else {
                                                     next = false;
                                                 }
@@ -126,6 +129,7 @@ public class ServerThread extends Thread {
                             if (serv.middle.canSlap() || serv.claim == serv.getIndex(this)) {
                                 serv.claim = -1;
                                 serv.middle.dealAll(deck);
+                                serv.turn = serv.getIndex(this);
                             } else {
                                 if (serv.lastSlap < System.nanoTime() - SLAP_DELAY_NS) {
                                     serv.lastSlap = System.nanoTime();

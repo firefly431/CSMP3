@@ -7,12 +7,12 @@ package cs.ers.server;
 
 import cs.ers.Card;
 import cs.ers.Deck;
+import cs.ers.Player;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.TreeMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -141,10 +141,15 @@ public class Server {
         data.append(players.size());
         data.append('\n');
         // send player name and deck size
-        for (ServerThread p : players) {
+        for (int i = 0; i < players.size(); i++) {
+            ServerThread p = players.get(i);
             data.append(p.getPlayerName());
             data.append('\n');
             data.append(p.getNumCards());
+            data.append('\n');
+            data.append(turn == i);
+            data.append('\n');
+            data.append(claim == i);
             data.append('\n');
         }
         // send middle
