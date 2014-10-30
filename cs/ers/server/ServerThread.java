@@ -112,6 +112,7 @@ public class ServerThread extends Thread {
                                                     serv.setClaim();
                                                     System.out.println("Claim is " + serv.claim);
                                                     System.out.println("We are " + serv.getIndex(this));
+                                                    serv.counter = -1;
                                                 } else {
                                                     next = false;
                                                 }
