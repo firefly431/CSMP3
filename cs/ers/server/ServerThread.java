@@ -5,6 +5,7 @@
 
 package cs.ers.server;
 
+import cs.ers.Card;
 import cs.ers.Deck;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,8 +82,40 @@ public class ServerThread extends Thread {
                         synchronized (serv) {
                             if (deck.cards.size() > 0) {
                                 if (serv.turn == serv.getIndex(this)) {
-                                    deck.deal(serv.middle);
-                                    serv.nextTurn();
+                                    serv.claim = -1;
+                                    Card dealt = deck.deal(serv.middle);
+                                    boolean next = true;
+                                    switch (dealt.getValue()) {
+                                        case Card.TEN:
+                                            // reset counter
+                                            serv.counter = -1;
+                                            break;
+                                        case Card.JACK:
+                                            serv.counter = 1;
+                                            break;
+                                        case Card.QUEEN:
+                                            serv.counter = 2;
+                                            break;
+                                        case Card.KING:
+                                            serv.counter = 3;
+                                            break;
+                                        case Card.ACE:
+                                            serv.counter = 4;
+                                            break;
+                                        default:
+                                            if (serv.counter != -1) {
+                                                serv.counter--;
+                                                if (serv.counter == -1) {
+                                                    // person before you
+                                                    // can take cards
+                                                    serv.setClaim();
+                                                } else {
+                                                    next = false;
+                                                }
+                                            }
+                                    }
+                                    if (next)
+                                        serv.nextTurn();
                                 } else {
                                     deck.burn(serv.middle);
                                 }
@@ -90,7 +123,8 @@ public class ServerThread extends Thread {
                         }
                     } else if (cmd.equals("CLAIM")) {
                         synchronized (serv) {
-                            if (serv.middle.canSlap()) {
+                            if (serv.middle.canSlap() || serv.claim == serv.getIndex(this)) {
+                                serv.claim = -1;
                                 serv.middle.dealAll(deck);
                             } else {
                                 if (serv.lastSlap < System.nanoTime() - SLAP_DELAY_NS) {

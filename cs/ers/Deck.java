@@ -29,15 +29,19 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
-    public void deal(Deck to) {
-        to.cards.addFirst(cards.removeLast());
+    public Card deal(Deck to) {
+        Card ret;
+        to.cards.addFirst(ret = cards.removeLast());
+        return ret;
     }
     public void dealAll(Deck to) {
         to.cards.addAll(0, cards);
         cards.clear();
     }
-    public void burn(Deck to) {
-        to.cards.addLast(cards.removeLast());
+    public Card burn(Deck to) {
+        Card ret;
+        to.cards.addLast(ret = cards.removeLast());
+        return ret;
     }
     public void burnAll(Deck to) {
         to.cards.addAll(cards);

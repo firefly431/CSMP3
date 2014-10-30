@@ -28,10 +28,24 @@ public class Server {
 
     public static final int PORT = 5760;
 
+    public void setClaim() {
+        boolean fail = false;
+        do {
+            claim--;
+            if (claim < 0) {
+                if (fail) return;
+                claim = players.size() - 1;
+                fail = true;
+            }
+        } while (players.get(claim).deck.cards.isEmpty());
+    }
+
     public static class NameTakenException extends Exception {}
 
     public long lastSlap;
     public int turn;
+    public int counter = -1;
+    public int claim = -1;
 
     public void init(int port) {
         middle = new Deck(true);
