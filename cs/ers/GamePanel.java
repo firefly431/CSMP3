@@ -84,6 +84,10 @@ public class GamePanel extends StatePanel {
             g.fillOval(tx + (sw += 2), y - 14, 10, 10);
             sw += 10;
         }
+        if (p.penalty != 0) {
+            g.setColor(Color.GREEN);
+            g.drawString("Penalty: " + p.penalty, tx + sw + 2, y);
+        }
     }
     public void drawDeck(Graphics g, Deck d, int x, int y) {
         drawDeck(g, d.cards.size(), x, y);

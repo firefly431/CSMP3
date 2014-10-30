@@ -136,17 +136,21 @@ public class ServerThread extends Thread {
                     } else if (cmd.equals("CLAIM")) {
                         synchronized (serv) {
                             if (serv.middle.canSlap() || serv.claim == serv.getIndex(this)) {
-                                serv.claim = -1;
-                                serv.counter = -1;
-                                serv.middle.dealAll(deck);
-                                serv.turn = serv.getIndex(this);
+                                if (penalty == 0) {
+                                    serv.claim = -1;
+                                    serv.counter = -1;
+                                    serv.middle.dealAll(deck);
+                                    serv.turn = serv.getIndex(this);
+                                } else {
+                                    penalty--;
+                                }
                             } else {
                                 if (serv.lastSlap < System.nanoTime() - SLAP_DELAY_NS) {
                                     if (deck.cards.size() > 0) {
                                         deck.burn(serv.middle);
                                         serv.validateTurn();
                                     } else {
-                                        // increase penalty
+                                        penalty++;
                                     }
                                 }
                                 serv.lastSlap = System.nanoTime();

@@ -10,14 +10,15 @@ package cs.ers;
  * @author s506571
  */
 public class Player {
-    public Player(String n, int nc, boolean t, boolean c) {
+    public Player(String n, int nc, boolean t, boolean c, int p) {
         name = n;
         ncards = nc;
         turn = t;
         claim = c;
+        penalty = p;
     }
     public Player(String n, int nc) {
-        this(n, nc, false, false);
+        this(n, nc, false, false, 0);
     }
     @Override
     public String toString() {
@@ -25,5 +26,6 @@ public class Player {
     }
     public String name;
     public int ncards;
-    boolean turn, claim;
+    public int penalty;
+    public boolean turn, claim;
 }

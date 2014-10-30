@@ -85,7 +85,9 @@ public class Client {
                 s.nextLine();
                 boolean pclaim = s.nextBoolean();
                 s.nextLine();
-                Player p = new Player(pn, nc, pturn, pclaim);
+                int ppen = s.nextInt();
+                s.nextLine();
+                Player p = new Player(pn, nc, pturn, pclaim, ppen);
                 players[i] = p;
             }
             int nc = s.nextInt();

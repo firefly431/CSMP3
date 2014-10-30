@@ -152,6 +152,8 @@ public class Server {
             data.append('\n');
             data.append(claim == i);
             data.append('\n');
+            data.append(p.penalty);
+            data.append('\n');
         }
         // send middle
         data.append(middle.cards.size());
