@@ -46,6 +46,7 @@ public class Server {
     public int turn;
     public int counter = -1;
     public int claim = -1;
+    public int counterplayer = -1;
 
     public void init(int port) {
         middle = new Deck(true);

@@ -89,18 +89,23 @@ public class ServerThread extends Thread {
                                         case Card.TEN:
                                             // reset counter
                                             serv.counter = -1;
+                                            serv.counterplayer = -1;
                                             break;
                                         case Card.JACK:
                                             serv.counter = 1;
+                                            serv.counterplayer = serv.getIndex(this);
                                             break;
                                         case Card.QUEEN:
                                             serv.counter = 2;
+                                            serv.counterplayer = serv.getIndex(this);
                                             break;
                                         case Card.KING:
                                             serv.counter = 3;
+                                            serv.counterplayer = serv.getIndex(this);
                                             break;
                                         case Card.ACE:
                                             serv.counter = 4;
+                                            serv.counterplayer = serv.getIndex(this);
                                             break;
                                         default:
                                             if (serv.counter != -1) {
@@ -109,10 +114,11 @@ public class ServerThread extends Thread {
                                                     // person before you
                                                     // can take cards
                                                     System.out.println("Setting claim");
-                                                    serv.setClaim();
+                                                    serv.claim = serv.counterplayer;
                                                     System.out.println("Claim is " + serv.claim);
                                                     System.out.println("We are " + serv.getIndex(this));
                                                     serv.counter = -1;
+                                                    serv.counterplayer = -1;
                                                 } else {
                                                     next = false;
                                                 }
