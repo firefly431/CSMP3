@@ -70,19 +70,19 @@ public class GamePanel extends StatePanel {
         drawDeck(g, p.ncards, x, y);
         g.setColor(Color.BLACK);
         FontMetrics fm = g.getFontMetrics();
-        int sw;
         int tx = x + Card.WIDTH / 2;
-        tx -= (sw = fm.stringWidth(p.name + " " + p.ncards)) / 2;
+        int sw = fm.stringWidth(p.name + " " + p.ncards);
+        tx -= sw / 2;
         g.drawString(p.name + " " + p.ncards, tx, y - 3);
         if (p.turn) {
             g.setColor(Color.RED);
-            g.fillOval(x + (sw += 1) * 2, y - 14, 10, 10);
-            sw += 5;
+            g.fillOval(tx + (sw += 2), y - 14, 10, 10);
+            sw += 10;
         }
         if (p.claim) {
             g.setColor(Color.BLUE);
-            g.fillOval(x + (sw += 1) * 2, y - 14, 10, 10);
-            sw += 5;
+            g.fillOval(tx + (sw += 2), y - 14, 10, 10);
+            sw += 10;
         }
     }
     public void drawDeck(Graphics g, Deck d, int x, int y) {

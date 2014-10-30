@@ -135,6 +135,7 @@ public class ServerThread extends Thread {
                         synchronized (serv) {
                             if (serv.middle.canSlap() || serv.claim == serv.getIndex(this)) {
                                 serv.claim = -1;
+                                serv.counter = -1;
                                 serv.middle.dealAll(deck);
                                 serv.turn = serv.getIndex(this);
                             } else {
