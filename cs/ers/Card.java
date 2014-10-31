@@ -41,7 +41,7 @@ public class Card implements Comparable<Card> {
         value = v;
     }
 
-    Card(int i) {
+    public Card(int i) {
         suit = i / VALUE_MAX;
         value = i % VALUE_MAX + 1;
     }
