@@ -26,15 +26,19 @@ public class AutoClient {
         new AutoClient().run();
     }
     public int getSleep() {
-        return 500 + (int)(500 * Math.random());
+        return 1 +(int)(Math.random() * 3);
     }
     public void run() {
+        String addr = JOptionPane.showInputDialog("Enter IP address of server");
+        name = JOptionPane.showInputDialog("Enter your name");
+        run(addr);
+    }
+    public void run(String addr) {
         JFrame lol = new JFrame("Close this window to exit autoplay");
         lol.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         lol.setVisible(true);
         timer = new ActionTimer(0, 0, out);
-        while (sock == null) {
-            String addr = JOptionPane.showInputDialog("Enter IP address of server");
+        {
             if (addr == null || addr.equals("")) return;
             try {
                 InetAddress ia = InetAddress.getByName(addr);
@@ -43,13 +47,13 @@ public class AutoClient {
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             } catch (UnknownHostException e) {
                 JOptionPane.showMessageDialog(null, "Unknown host");
-                continue;
+                return;
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "IO exception");
                 return;
             }
         }
-        out.println(name=JOptionPane.showInputDialog("Enter your name"));
+        out.println(name);
         out.flush();
         lol.setTitle(lol.getTitle() + ": " + name);
         try {
@@ -84,6 +88,8 @@ public class AutoClient {
                         action = 0;
                     }
                 }
+                if (nc == 52)
+                    action = -2;
             }
             int nc = s.nextInt();
             s.nextLine();
@@ -93,8 +99,10 @@ public class AutoClient {
                 if (s.hasNextLine())
                     s.nextLine();
             }
-            if (middle.canSlap())
+            if (middle.canSlap() && action != -2)
                 action = 1;
+            if (action == -2)
+                action = -1;
             if (timer.isAlive()) {
                 if (action != timer.do_action) {
                     timer.interrupt();

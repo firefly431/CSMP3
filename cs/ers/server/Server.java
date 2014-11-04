@@ -108,16 +108,17 @@ public class Server {
                 }
                 middle.shuffle();
                 ServerThread threads[] = players.toArray(new ServerThread[players.size()]);
-                int nc = middle.cards.size() / threads.length;
+                int nc = (middle.cards.size() - 1) / threads.length;
                 for (int q = 0; q < nc; q++) {
-                    for (int i = 0; i < threads.length; i++)
+                    for (int i = 1; i < threads.length; i++)
                         middle.deal(threads[i].deck);
                 }
-                int i = (int)(Math.random() * threads.length);
+                int i = (int)(Math.random() * (threads.length - 1));
                 while (!middle.cards.isEmpty()) {
                     // deal to a random player
-                    middle.deal(threads[(i++) % threads.length].deck);
+                    middle.deal(threads[(i++) % (threads.length - 1) + 1].deck);
                 }
+                turn = 1;
                 broadcast();
             }
         });
