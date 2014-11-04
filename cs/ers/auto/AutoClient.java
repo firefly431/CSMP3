@@ -22,11 +22,13 @@ public class AutoClient {
     BufferedReader in;
     String name;
     ActionTimer timer;
+    int base_delay = 1;
+    int rand_delay = 3;
     public static void main(String argv[]) {
         new AutoClient().run();
     }
     public int getSleep() {
-        return 1 +(int)(Math.random() * 3);
+        return base_delay+(int)(Math.random() * rand_delay);
     }
     public void run() {
         String addr = JOptionPane.showInputDialog("Enter IP address of server");
