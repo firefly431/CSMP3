@@ -118,7 +118,7 @@ public class Server {
                     // deal to a random player
                     middle.deal(threads[(i++) % threads.length].deck);
                 }
-                turn = 1;
+                turn = 0;
                 broadcast();
             }
         });
