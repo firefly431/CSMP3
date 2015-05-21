@@ -6,8 +6,7 @@
 package cs.ers;
 
 /**
- *
- * @author s506571
+ * Card class. Self-explanatory.
  */
 public class Card implements Comparable<Card> {
     // suits
@@ -31,7 +30,7 @@ public class Card implements Comparable<Card> {
     public static final int QUEEN = 12;
     public static final int KING = 13;
     public static final int VALUE_MAX = 13;
-    // constants
+    // constants (display)
     public static final int WIDTH = 112;
     public static final int HEIGHT = 156;
     // variables
@@ -41,7 +40,7 @@ public class Card implements Comparable<Card> {
         value = v;
     }
 
-    public Card(int i) {
+    public Card(int i) { // index
         suit = i / VALUE_MAX;
         value = i % VALUE_MAX + 1;
     }
