@@ -39,6 +39,7 @@ public class GameFrame extends JFrame {
         getContentPane().add(currentPanel);
         addKeyListener((KeyListener)currentPanel);
         pack();
+        setTitle("ERS");
     }
 
     public JPanel getCurrentPanel() {

@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 /**
  * Basically, write a message after some time.
- * Uses a thread so as to not pause the AI read loop.
+ * Uses a thread so as to not pause the AI.
  */
 public class ActionTimer extends Thread {
     public int do_action;

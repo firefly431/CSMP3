@@ -121,9 +121,9 @@ public class AutoClient {
                 action = 1;
             if (action == -2)
                 action = -1;
-            if (timer.isAlive()) { // if we're already doing something
-                if (action != timer.do_action) { // if it's not the same
-                    timer.interrupt(); // interrupt it and do the new thing
+            if (timer.isAlive()) {
+                if (action != timer.do_action) {
+                    timer.interrupt();
                     if (action != -1) {
                         timer = new ActionTimer(action, getSleep(), out);
                         timer.start();

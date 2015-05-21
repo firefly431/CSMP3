@@ -24,9 +24,6 @@ public class AutoClientRunner implements Runnable {
             new Thread(new AutoClientRunner()).start();
         }
     }
-    /**
-     * Run an instance of the client
-     */
     public void run() {
         AutoClient a = new AutoClient();
         a.name = String.valueOf(n);

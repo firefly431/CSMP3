@@ -141,13 +141,12 @@ public class GamePanel extends StatePanel {
         }
         if (ndecks == 1) {
             // the ternary operator handles the case when there's one deck (and our index is -1)
-            // the 1 - index is used as a quick way to determine the other index
             drawDeck(g, decks[decks.length == 1 ? 0 : (1 - index)], (dsx + dex) / 2, dsy);
         }
         // draw us
         if (index >= 0)
             drawDeck(g, decks[index], (dsx + dex) / 2, dey);
-        if (middle != null) { // meaningless to synchronize on null
+        if (middle != null) {
             synchronized (middle) {
                 // draw middle
                 drawFront(g, middle.getFront(5), (dsx + dex) / 2, (dsy + dey) / 2);

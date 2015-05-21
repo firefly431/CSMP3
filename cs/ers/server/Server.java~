@@ -186,7 +186,6 @@ public class Server {
             data.append('\n');
         }
         String sss = data.toString();
-        // send to all the players
         for (ServerThread p : players) {
             p.send(sss);
         }

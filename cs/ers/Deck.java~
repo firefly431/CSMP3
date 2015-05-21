@@ -70,9 +70,6 @@ public class Deck {
 
 
     // return.length <= num
-    /**
-     * Get the front num cards.
-     */
     public Card getFront(int num)[] {
         Card[] ret = new Card[cards.size() < num ? cards.size() : num];
         int i = 0;

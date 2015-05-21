@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package cs.ers;
 
 /**
- *
- * @author s506571
+ * Interface for OOP
  */
 public interface MessageSender {
+    /**
+     * Called by client to send a message to the server
+     * without violating encapsulation
+     */
     public void send(String data);
 }
